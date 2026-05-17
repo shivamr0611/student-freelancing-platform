@@ -1,3 +1,4 @@
+
 # 🎓 Student Freelancing Platform
 
 A full-stack Django web application with **3 roles**: Student, Company, Admin.
@@ -171,3 +172,6 @@ Visit: **http://127.0.0.1:8000**
 - On Windows with XAMPP/WAMP: just set USER/PASSWORD in settings.py
 - Uploaded files stored in `media/submissions/`
 - The `database/schema.sql` is for reference. Use `python manage.py migrate` to create tables.
+=======
+# student-freelancing-platform
+
