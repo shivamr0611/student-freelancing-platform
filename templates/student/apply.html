@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}Apply — {{ job.title }}{% endblock %}
+{% block content %}
+<div style="max-width:680px;">
+  <a href="{% url 'student_home' %}" class="btn btn-secondary btn-sm" style="margin-bottom:20px;">← Back to Jobs</a>
+
+  <!-- Job summary card -->
+  <div class="card" style="margin-bottom:20px;border-left:3px solid var(--accent);">
+    <div style="font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;">{{ job.title }}</div>
+    <div style="color:var(--muted);font-size:0.85rem;margin-top:4px;">{{ job.company.company_name }}</div>
+    <div style="display:flex;gap:16px;margin-top:10px;font-size:0.85rem;flex-wrap:wrap;">
+      <span style="color:var(--accent2);">💰 ₹{{ job.budget }}</span>
+      <span style="color:var(--muted);">📅 Deadline: {{ job.deadline }}</span>
+      {% if job.category %}<span style="color:var(--muted);">🏷 {{ job.category }}</span>{% endif %}
+    </div>
+    <p style="margin-top:12px;font-size:0.875rem;color:var(--muted);line-height:1.6;">{{ job.description }}</p>
+    <div style="margin-top:10px;">
+      <span style="font-size:0.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;">Required Skills</span><br>
+      {% for skill in job.skills_list %}
+        <span class="skill-tag">{{ skill }}</span>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Apply form -->
+  <div class="card">
+    <h2 style="font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:700;margin-bottom:18px;">Write Your Proposal</h2>
+    <form method="POST">
+      {% csrf_token %}
+      <div class="form-group">
+        <label>Your Proposal</label>
+        <textarea name="proposal" class="form-control" rows="6"
+          placeholder="Describe your relevant experience, how you'll approach this project, and why you're the best fit...">{{ form.proposal.value|default:'' }}</textarea>
+        {% if form.proposal.errors %}<small style="color:var(--danger)">{{ form.proposal.errors.0 }}</small>{% endif %}
+      </div>
+      <div style="display:flex;gap:10px;">
+        <button type="submit" class="btn btn-primary">📤 Submit Application</button>
+        <a href="{% url 'student_home' %}" class="btn btn-secondary">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

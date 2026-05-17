@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block title %}Company Dashboard — FreelanceHub{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Dashboard</h1>
+  <p>Welcome back, {{ profile.company_name }} 👋</p>
+</div>
+
+<!-- Stats -->
+<div class="stat-grid">
+  <div class="stat-card accent">
+    <div class="stat-label">Total Jobs Posted</div>
+    <div class="stat-value">{{ total_jobs }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Active / In Progress</div>
+    <div class="stat-value" style="color:var(--warn);">{{ active_jobs }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Total Applications</div>
+    <div class="stat-value">{{ total_applications }}</div>
+  </div>
+  <div class="stat-card green">
+    <div class="stat-label">Payments Released</div>
+    <div class="stat-value">{{ total_payments }}</div>
+  </div>
+</div>
+
+<!-- Quick actions -->
+<div style="display:flex;gap:12px;margin-bottom:28px;flex-wrap:wrap;">
+  <a href="{% url 'company_post_job' %}" class="btn btn-primary">➕ Post New Job</a>
+  <a href="{% url 'company_applicants' %}" class="btn btn-secondary">👥 View Applicants</a>
+  <a href="{% url 'company_payments' %}" class="btn btn-secondary">💳 Payments</a>
+</div>
+
+<!-- Recent jobs -->
+<div class="card">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+    <h2 style="font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;">Recent Job Posts</h2>
+    <a href="{% url 'company_post_job' %}" style="font-size:0.83rem;color:var(--accent);">+ New Job</a>
+  </div>
+  {% if recent_jobs %}
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Title</th><th>Budget</th><th>Deadline</th><th>Status</th><th>Applications</th></tr>
+      </thead>
+      <tbody>
+        {% for job in recent_jobs %}
+        <tr>
+          <td style="font-weight:500;">{{ job.title }}</td>
+          <td>₹{{ job.budget }}</td>
+          <td style="color:var(--muted);font-size:0.85rem;">{{ job.deadline }}</td>
+          <td><span class="badge badge-{{ job.status }}">{{ job.get_status_display }}</span></td>
+          <td>
+            <a href="{% url 'company_applicants' %}?job={{ job.id }}" style="color:var(--accent);font-size:0.85rem;">
+              {{ job.applications.count }} applicant{{ job.applications.count|pluralize }}
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state" style="padding:30px 20px;">
+    <p>No jobs posted yet. <a href="{% url 'company_post_job' %}" style="color:var(--accent);">Post your first job →</a></p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

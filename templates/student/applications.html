@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block title %}My Applications — FreelanceHub{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>My Applications</h1>
+  <p>Track the status of all your job applications</p>
+</div>
+
+{% if applications %}
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Job Title</th>
+          <th>Company</th>
+          <th>Budget</th>
+          <th>Applied On</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for app in applications %}
+        <tr>
+          <td>
+            <div style="font-weight:500;">{{ app.job.title }}</div>
+            {% if app.job.category %}<div style="font-size:0.78rem;color:var(--muted);">{{ app.job.category }}</div>{% endif %}
+          </td>
+          <td>{{ app.job.company.company_name }}</td>
+          <td>₹{{ app.job.budget }}</td>
+          <td style="color:var(--muted);font-size:0.85rem;">{{ app.applied_at|date:"d M Y" }}</td>
+          <td>
+            <span class="badge badge-{{ app.status }}">
+              {% if app.status == 'pending' %}⏳ Pending
+              {% elif app.status == 'hired' %}✅ Hired
+              {% else %}❌ Rejected{% endif %}
+            </span>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% else %}
+<div class="empty-state">
+  <div class="icon">📋</div>
+  <p>You haven't applied to any jobs yet.</p>
+  <a href="{% url 'student_home' %}" class="btn btn-primary" style="margin-top:16px;">Browse Jobs</a>
+</div>
+{% endif %}
+{% endblock %}

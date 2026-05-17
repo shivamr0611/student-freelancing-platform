@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block title %}Admin Overview — FreelanceHub{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Platform Overview</h1>
+  <p>Monitor students, companies, jobs, and earnings</p>
+</div>
+
+<div class="stat-grid">
+  <div class="stat-card accent">
+    <div class="stat-label">Total Students</div>
+    <div class="stat-value">{{ total_students }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Total Companies</div>
+    <div class="stat-value">{{ total_companies }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Total Jobs</div>
+    <div class="stat-value">{{ total_jobs }}</div>
+  </div>
+  <div class="stat-card" style="border-left:3px solid var(--warn);">
+    <div class="stat-label">Active Jobs</div>
+    <div class="stat-value" style="color:var(--warn);">{{ active_jobs }}</div>
+  </div>
+  <div class="stat-card green">
+    <div class="stat-label">Payments Completed</div>
+    <div class="stat-value">{{ total_payments }}</div>
+  </div>
+  <div class="stat-card" style="border-left:3px solid var(--accent2);">
+    <div class="stat-label">Platform Commission ({{ commission_rate }}%)</div>
+    <div class="stat-value" style="font-size:1.3rem;color:var(--accent2);">₹{{ platform_commission|floatformat:0 }}</div>
+  </div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+  <a href="{% url 'admin_manage_students' %}" style="text-decoration:none;">
+    <div class="card" style="cursor:pointer;transition:border-color 0.15s;text-align:center;padding:30px;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+      <div style="font-size:2.5rem;margin-bottom:10px;">🎓</div>
+      <div style="font-family:'Syne',sans-serif;font-weight:700;color:var(--text);">Manage Students</div>
+      <p style="color:var(--muted);font-size:0.83rem;margin-top:6px;">Activate / deactivate student accounts</p>
+    </div>
+  </a>
+  <a href="{% url 'admin_manage_companies' %}" style="text-decoration:none;">
+    <div class="card" style="cursor:pointer;transition:border-color 0.15s;text-align:center;padding:30px;" onmouseover="this.style.borderColor='var(--accent2)'" onmouseout="this.style.borderColor='var(--border)'">
+      <div style="font-size:2.5rem;margin-bottom:10px;">🏢</div>
+      <div style="font-family:'Syne',sans-serif;font-weight:700;color:var(--text);">Manage Companies</div>
+      <p style="color:var(--muted);font-size:0.83rem;margin-top:6px;">Approve / suspend company accounts</p>
+    </div>
+  </a>
+</div>
+{% endblock %}

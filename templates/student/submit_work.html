@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}Submit Work{% endblock %}
+{% block content %}
+<div style="max-width:600px;">
+  <a href="{% url 'student_active_jobs' %}" class="btn btn-secondary btn-sm" style="margin-bottom:20px;">← Back to Active Jobs</a>
+
+  <div class="card" style="margin-bottom:18px;border-left:3px solid var(--accent2);">
+    <div style="font-family:'Syne',sans-serif;font-weight:700;">{{ application.job.title }}</div>
+    <div style="color:var(--muted);font-size:0.85rem;">{{ application.job.company.company_name }} · ₹{{ application.job.budget }}</div>
+  </div>
+
+  <div class="card">
+    <h2 style="font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:700;margin-bottom:18px;">
+      {% if application.submission %}Update Your Submission{% else %}Submit Your Work{% endif %}
+    </h2>
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="form-group">
+        <label>Upload File (optional)</label>
+        <input type="file" name="file" class="form-control">
+        {% if application.submission and application.submission.file %}
+          <small style="color:var(--muted);margin-top:4px;display:block;">Current: <a href="{{ application.submission.file.url }}" target="_blank" style="color:var(--accent);">{{ application.submission.file.name }}</a></small>
+        {% endif %}
+      </div>
+      <div class="form-group">
+        <label>Notes / Description</label>
+        <textarea name="notes" class="form-control" rows="5"
+          placeholder="Describe what you've done, add links (GitHub, Drive, etc.), or any notes for the company...">{% if application.submission %}{{ application.submission.notes }}{% endif %}</textarea>
+      </div>
+      <div style="display:flex;gap:10px;">
+        <button type="submit" class="btn btn-success">📤 Submit Work</button>
+        <a href="{% url 'student_active_jobs' %}" class="btn btn-secondary">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

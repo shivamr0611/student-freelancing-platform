@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block title %}Post a Job — FreelanceHub{% endblock %}
+{% block content %}
+<div style="max-width:680px;">
+  <div class="page-header">
+    <h1>Post a New Job</h1>
+    <p>Describe the project to attract the right students</p>
+  </div>
+
+  <div class="card">
+    <form method="POST">
+      {% csrf_token %}
+      <div class="form-group">
+        <label>Job Title</label>
+        <input type="text" name="title" class="form-control" value="{{ form.title.value|default:'' }}"
+          placeholder="e.g. Build a Django REST API for my mobile app">
+        {% if form.title.errors %}<small style="color:var(--danger)">{{ form.title.errors.0 }}</small>{% endif %}
+      </div>
+
+      <div class="form-group">
+        <label>Job Description</label>
+        <textarea name="description" class="form-control" rows="5"
+          placeholder="Describe the project requirements, deliverables, and any specific needs...">{{ form.description.value|default:'' }}</textarea>
+        {% if form.description.errors %}<small style="color:var(--danger)">{{ form.description.errors.0 }}</small>{% endif %}
+      </div>
+
+      <div class="form-group">
+        <label>Required Skills</label>
+        <input type="text" name="required_skills" class="form-control" value="{{ form.required_skills.value|default:'' }}"
+          placeholder="e.g. Python, Django, MySQL">
+        {% if form.required_skills.errors %}<small style="color:var(--danger)">{{ form.required_skills.errors.0 }}</small>{% endif %}
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Budget (₹)</label>
+          <input type="number" name="budget" class="form-control" value="{{ form.budget.value|default:'' }}" placeholder="e.g. 5000">
+          {% if form.budget.errors %}<small style="color:var(--danger)">{{ form.budget.errors.0 }}</small>{% endif %}
+        </div>
+        <div class="form-group">
+          <label>Deadline</label>
+          <input type="date" name="deadline" class="form-control" value="{{ form.deadline.value|default:'' }}">
+          {% if form.deadline.errors %}<small style="color:var(--danger)">{{ form.deadline.errors.0 }}</small>{% endif %}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Category (optional)</label>
+        <input type="text" name="category" class="form-control" value="{{ form.category.value|default:'' }}"
+          placeholder="e.g. Web Development, Design, Data Entry">
+      </div>
+
+      <div style="display:flex;gap:10px;margin-top:8px;">
+        <button type="submit" class="btn btn-primary">🚀 Post Job</button>
+        <a href="{% url 'company_home' %}" class="btn btn-secondary">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block title %}Applicants — FreelanceHub{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Applicants</h1>
+  <p>Review proposals and hire the best candidate</p>
+</div>
+
+<!-- Filter by job -->
+<form method="GET" style="margin-bottom:20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+  <select name="job" class="form-control" style="max-width:280px;" onchange="this.form.submit()">
+    <option value="">— All Jobs —</option>
+    {% for job in jobs %}
+      <option value="{{ job.id }}" {% if selected_job == job.id|stringformat:"s" %}selected{% endif %}>{{ job.title }}</option>
+    {% endfor %}
+  </select>
+  {% if selected_job %}
+    <a href="{% url 'company_applicants' %}" class="btn btn-secondary btn-sm">Clear</a>
+  {% endif %}
+</form>
+
+{% if applications %}
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Student</th><th>Job</th><th>Proposal</th><th>Applied</th><th>Status</th><th>Actions</th></tr>
+      </thead>
+      <tbody>
+        {% for app in applications %}
+        <tr>
+          <td>
+            <div style="font-weight:500;">{{ app.student.full_name }}</div>
+            <div style="font-size:0.78rem;color:var(--muted);">{{ app.student.college }}</div>
+            <div style="margin-top:4px;">
+              {% for skill in app.student.skills_list %}
+                <span class="skill-tag" style="font-size:0.7rem;">{{ skill }}</span>
+              {% endfor %}
+            </div>
+          </td>
+          <td>
+            <div style="font-size:0.9rem;">{{ app.job.title }}</div>
+            <div style="font-size:0.78rem;color:var(--accent2);">₹{{ app.job.budget }}</div>
+          </td>
+          <td style="max-width:220px;">
+            <div style="font-size:0.83rem;color:var(--muted);line-height:1.5;">{{ app.proposal|truncatechars:100 }}</div>
+          </td>
+          <td style="font-size:0.83rem;color:var(--muted);">{{ app.applied_at|date:"d M Y" }}</td>
+          <td><span class="badge badge-{{ app.status }}">
+            {% if app.status == 'pending' %}⏳ Pending
+            {% elif app.status == 'hired' %}✅ Hired
+            {% else %}❌ Rejected{% endif %}
+          </span></td>
+          <td>
+            {% if app.status == 'pending' %}
+              <div style="display:flex;gap:6px;">
+                <a href="{% url 'company_hire' app.id %}"
+                   onclick="return confirm('Hire {{ app.student.full_name }} for this job?')"
+                   class="btn btn-success btn-sm">✅ Hire</a>
+                <a href="{% url 'company_reject' app.id %}"
+                   onclick="return confirm('Reject this application?')"
+                   class="btn btn-danger btn-sm">✗</a>
+              </div>
+            {% else %}
+              <span style="font-size:0.8rem;color:var(--muted);">—</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% else %}
+<div class="empty-state">
+  <div class="icon">👥</div>
+  <p>No applications found yet. Post more jobs to attract students.</p>
+  <a href="{% url 'company_post_job' %}" class="btn btn-primary" style="margin-top:16px;">Post a Job</a>
+</div>
+{% endif %}
+{% endblock %}

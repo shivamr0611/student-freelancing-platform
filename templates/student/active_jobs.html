@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block title %}Active Jobs — FreelanceHub{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Active Jobs</h1>
+  <p>Jobs you've been hired for — submit your work here</p>
+</div>
+
+{% if hired_apps %}
+  {% for app in hired_apps %}
+  <div class="job-card" style="border-left:3px solid var(--accent2);">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;">
+      <div>
+        <div class="job-card-title">{{ app.job.title }}</div>
+        <div style="color:var(--muted);font-size:0.85rem;margin-top:3px;">{{ app.job.company.company_name }}</div>
+        <div class="job-card-meta">
+          <span>💰 ₹{{ app.job.budget }}</span>
+          <span>📅 Deadline: {{ app.job.deadline }}</span>
+          <span class="badge badge-hired" style="margin-left:4px;">✅ Hired</span>
+        </div>
+        <p style="margin-top:10px;font-size:0.85rem;color:var(--muted);">{{ app.job.description|truncatechars:120 }}</p>
+
+        {% if app.submission %}
+          <div style="margin-top:12px;background:rgba(0,212,170,0.08);border:1px solid rgba(0,212,170,0.2);border-radius:8px;padding:12px;">
+            <div style="font-size:0.8rem;color:var(--accent2);font-weight:600;text-transform:uppercase;letter-spacing:1px;">Work Submitted ✓</div>
+            {% if app.submission.file %}
+              <a href="{{ app.submission.file.url }}" target="_blank" style="font-size:0.85rem;color:var(--accent);">📎 View File</a>
+            {% endif %}
+            {% if app.submission.notes %}
+              <p style="font-size:0.85rem;color:var(--muted);margin-top:4px;">{{ app.submission.notes }}</p>
+            {% endif %}
+          </div>
+        {% endif %}
+
+        <!-- Payment status -->
+        {% if app.payment %}
+          <div style="margin-top:8px;">
+            <span class="badge badge-{{ app.payment.status }}">
+              {% if app.payment.status == 'paid' %}💸 Payment Received — ₹{{ app.payment.amount }}{% else %}⏳ Payment Pending{% endif %}
+            </span>
+          </div>
+        {% endif %}
+      </div>
+      <div>
+        <a href="{% url 'student_submit_work' app.id %}" class="btn btn-success btn-sm">
+          {% if app.submission %}✏️ Update Submission{% else %}📤 Submit Work{% endif %}
+        </a>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+{% else %}
+  <div class="empty-state">
+    <div class="icon">⚡</div>
+    <p>No active jobs yet. Keep applying!</p>
+    <a href="{% url 'student_home' %}" class="btn btn-primary" style="margin-top:16px;">Browse Jobs</a>
+  </div>
+{% endif %}
+{% endblock %}

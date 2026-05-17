@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block title %}Manage Companies — Admin{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Manage Companies</h1>
+  <p>{{ companies|length }} registered compan{{ companies|length|pluralize:"y,ies" }}</p>
+</div>
+
+{% if companies %}
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>#</th><th>Company</th><th>Industry</th><th>Email</th><th>Jobs Posted</th><th>Joined</th><th>Status</th><th>Action</th></tr>
+      </thead>
+      <tbody>
+        {% for company in companies %}
+        <tr>
+          <td style="color:var(--muted);font-size:0.83rem;">{{ forloop.counter }}</td>
+          <td>
+            <div style="font-weight:500;">{{ company.company_name }}</div>
+            <div style="font-size:0.78rem;color:var(--muted);">@{{ company.user.username }}</div>
+          </td>
+          <td style="font-size:0.85rem;color:var(--muted);">{{ company.industry|default:"—" }}</td>
+          <td style="font-size:0.83rem;">{{ company.email }}</td>
+          <td>
+            <span style="font-family:'Syne',sans-serif;font-weight:700;color:var(--accent);">{{ company.jobs.count }}</span>
+          </td>
+          <td style="font-size:0.83rem;color:var(--muted);">{{ company.created_at|date:"d M Y" }}</td>
+          <td>
+            {% if company.user.is_active %}
+              <span class="badge badge-hired">Active</span>
+            {% else %}
+              <span class="badge badge-rejected">Inactive</span>
+            {% endif %}
+          </td>
+          <td>
+            <a href="{% url 'admin_toggle_company' company.user.id %}"
+               class="btn btn-sm {% if company.user.is_active %}btn-danger{% else %}btn-success{% endif %}"
+               onclick="return confirm('{% if company.user.is_active %}Deactivate{% else %}Activate{% endif %} this company?')">
+              {% if company.user.is_active %}Deactivate{% else %}Activate{% endif %}
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% else %}
+<div class="empty-state">
+  <div class="icon">🏢</div>
+  <p>No companies registered yet.</p>
+</div>
+{% endif %}
+{% endblock %}

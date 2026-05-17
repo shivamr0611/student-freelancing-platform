@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}FreelanceHub{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0d0f14;
+      --surface: #161922;
+      --surface2: #1e2230;
+      --border: #2a2f3e;
+      --accent: #6c63ff;
+      --accent2: #00d4aa;
+      --danger: #ff4d6d;
+      --warn: #ffa94d;
+      --text: #e8eaf0;
+      --muted: #7b8099;
+      --radius: 12px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+    }
+    /* ── Sidebar ── */
+    .sidebar {
+      width: 240px;
+      min-height: 100vh;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      z-index: 100;
+    }
+    .sidebar-brand {
+      padding: 24px 20px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .brand-logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.5px;
+    }
+    .brand-role {
+      font-size: 0.7rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-top: 4px;
+    }
+    .sidebar-nav {
+      flex: 1;
+      padding: 16px 12px;
+      list-style: none;
+    }
+    .sidebar-nav li { margin-bottom: 4px; }
+    .sidebar-nav a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.15s;
+    }
+    .sidebar-nav a:hover, .sidebar-nav a.active {
+      background: var(--surface2);
+      color: var(--text);
+    }
+    .sidebar-nav a.active { color: var(--accent); }
+    .sidebar-nav .icon { width: 18px; text-align: center; font-size: 1rem; }
+    .sidebar-footer {
+      padding: 16px 12px;
+      border-top: 1px solid var(--border);
+    }
+    .sidebar-footer a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      color: var(--danger);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: background 0.15s;
+    }
+    .sidebar-footer a:hover { background: rgba(255,77,109,0.1); }
+    /* ── Main ── */
+    .main-content {
+      margin-left: 240px;
+      flex: 1;
+      padding: 32px;
+      min-height: 100vh;
+    }
+    .page-header {
+      margin-bottom: 28px;
+    }
+    .page-header h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .page-header p { color: var(--muted); margin-top: 4px; }
+    /* ── Cards ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+    }
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+    .stat-label { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+    .stat-value {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-top: 6px;
+      color: var(--text);
+    }
+    .stat-card.accent .stat-value { color: var(--accent); }
+    .stat-card.green .stat-value { color: var(--accent2); }
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 18px;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      text-decoration: none;
+      transition: all 0.15s;
+    }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: #5a52e0; }
+    .btn-success { background: var(--accent2); color: #0d0f14; }
+    .btn-success:hover { background: #00bfa0; }
+    .btn-danger { background: var(--danger); color: #fff; }
+    .btn-danger:hover { background: #e03558; }
+    .btn-secondary {
+      background: var(--surface2);
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover { color: var(--text); }
+    .btn-sm { padding: 6px 12px; font-size: 0.8rem; }
+    /* ── Table ── */
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    th {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--muted);
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+    }
+    td {
+      padding: 14px;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9rem;
+      vertical-align: middle;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255,255,255,0.02); }
+    /* ── Badges ── */
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+    .badge-pending { background: rgba(255,169,77,0.15); color: var(--warn); }
+    .badge-hired, .badge-paid { background: rgba(0,212,170,0.15); color: var(--accent2); }
+    .badge-rejected, .badge-not_paid { background: rgba(255,77,109,0.15); color: var(--danger); }
+    .badge-open { background: rgba(108,99,255,0.15); color: var(--accent); }
+    .badge-in_progress { background: rgba(255,169,77,0.15); color: var(--warn); }
+    .badge-completed { background: rgba(0,212,170,0.15); color: var(--accent2); }
+    /* ── Forms ── */
+    .form-group { margin-bottom: 18px; }
+    .form-group label {
+      display: block;
+      font-size: 0.83rem;
+      font-weight: 500;
+      color: var(--muted);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .form-control {
+      width: 100%;
+      padding: 10px 14px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .form-control:focus { border-color: var(--accent); }
+    select.form-control option { background: var(--surface2); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    /* ── Alerts ── */
+    .messages { margin-bottom: 20px; }
+    .alert {
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      margin-bottom: 8px;
+    }
+    .alert-success { background: rgba(0,212,170,0.1); border: 1px solid rgba(0,212,170,0.3); color: var(--accent2); }
+    .alert-error, .alert-danger { background: rgba(255,77,109,0.1); border: 1px solid rgba(255,77,109,0.3); color: var(--danger); }
+    .alert-warning { background: rgba(255,169,77,0.1); border: 1px solid rgba(255,169,77,0.3); color: var(--warn); }
+    .alert-info { background: rgba(108,99,255,0.1); border: 1px solid rgba(108,99,255,0.3); color: var(--accent); }
+    /* ── Skill tags ── */
+    .skill-tag {
+      display: inline-block;
+      padding: 3px 10px;
+      background: rgba(108,99,255,0.12);
+      color: var(--accent);
+      border-radius: 4px;
+      font-size: 0.75rem;
+      margin: 2px;
+    }
+    /* ── Job card ── */
+    .job-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 14px;
+      transition: border-color 0.15s;
+    }
+    .job-card:hover { border-color: var(--accent); }
+    .job-card-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+    .job-card-meta {
+      display: flex;
+      gap: 16px;
+      margin-top: 8px;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    .job-card-meta span { display: flex; align-items: center; gap: 4px; }
+    /* ── Search bar ── */
+    .search-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .search-bar .form-control { max-width: 220px; }
+    /* ── Empty state ── */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--muted);
+    }
+    .empty-state .icon { font-size: 3rem; margin-bottom: 12px; }
+    .empty-state p { font-size: 0.9rem; }
+    @media (max-width: 768px) {
+      .sidebar { width: 60px; }
+      .sidebar-brand, .brand-role, .sidebar-nav a span { display: none; }
+      .main-content { margin-left: 60px; padding: 20px; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+{% if user.is_authenticated %}
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-logo">FreelanceHub</div>
+    <div class="brand-role">
+      {% if user.role == 'student' %}Student Portal
+      {% elif user.role == 'company' %}Company Portal
+      {% else %}Admin Panel{% endif %}
+    </div>
+  </div>
+  <ul class="sidebar-nav">
+    {% if user.role == 'student' %}
+      <li><a href="{% url 'student_home' %}" {% if request.resolver_match.url_name == 'student_home' %}class="active"{% endif %}><span class="icon">🏠</span><span>Browse Jobs</span></a></li>
+      <li><a href="{% url 'student_applications' %}" {% if request.resolver_match.url_name == 'student_applications' %}class="active"{% endif %}><span class="icon">📋</span><span>Applications</span></a></li>
+      <li><a href="{% url 'student_active_jobs' %}" {% if request.resolver_match.url_name == 'student_active_jobs' %}class="active"{% endif %}><span class="icon">⚡</span><span>Active Jobs</span></a></li>
+      <li><a href="{% url 'student_profile' %}" {% if request.resolver_match.url_name == 'student_profile' %}class="active"{% endif %}><span class="icon">👤</span><span>Profile</span></a></li>
+    {% elif user.role == 'company' %}
+      <li><a href="{% url 'company_home' %}" {% if request.resolver_match.url_name == 'company_home' %}class="active"{% endif %}><span class="icon">🏠</span><span>Dashboard</span></a></li>
+      <li><a href="{% url 'company_post_job' %}" {% if request.resolver_match.url_name == 'company_post_job' %}class="active"{% endif %}><span class="icon">➕</span><span>Post Job</span></a></li>
+      <li><a href="{% url 'company_applicants' %}" {% if request.resolver_match.url_name == 'company_applicants' %}class="active"{% endif %}><span class="icon">👥</span><span>Applicants</span></a></li>
+      <li><a href="{% url 'company_active_jobs' %}" {% if request.resolver_match.url_name == 'company_active_jobs' %}class="active"{% endif %}><span class="icon">⚡</span><span>Active Jobs</span></a></li>
+      <li><a href="{% url 'company_payments' %}" {% if request.resolver_match.url_name == 'company_payments' %}class="active"{% endif %}><span class="icon">💳</span><span>Payments</span></a></li>
+      <li><a href="{% url 'company_profile' %}" {% if request.resolver_match.url_name == 'company_profile' %}class="active"{% endif %}><span class="icon">🏢</span><span>Profile</span></a></li>
+    {% elif user.role == 'admin' %}
+      <li><a href="{% url 'admin_home' %}" {% if request.resolver_match.url_name == 'admin_home' %}class="active"{% endif %}><span class="icon">📊</span><span>Overview</span></a></li>
+      <li><a href="{% url 'admin_manage_students' %}" {% if request.resolver_match.url_name == 'admin_manage_students' %}class="active"{% endif %}><span class="icon">🎓</span><span>Students</span></a></li>
+      <li><a href="{% url 'admin_manage_companies' %}" {% if request.resolver_match.url_name == 'admin_manage_companies' %}class="active"{% endif %}><span class="icon">🏢</span><span>Companies</span></a></li>
+      <li><a href="{% url 'admin_settings' %}" {% if request.resolver_match.url_name == 'admin_settings' %}class="active"{% endif %}><span class="icon">⚙️</span><span>Settings</span></a></li>
+    {% endif %}
+  </ul>
+  <div class="sidebar-footer">
+    <a href="{% url 'logout' %}"><span class="icon">🚪</span><span>Logout</span></a>
+  </div>
+</aside>
+{% endif %}
+
+<main class="main-content" {% if not user.is_authenticated %}style="margin-left:0;display:flex;align-items:center;justify-content:center;"{% endif %}>
+  {% if messages %}
+  <div class="messages">
+    {% for msg in messages %}
+    <div class="alert alert-{{ msg.tags }}">{{ msg }}</div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% block content %}{% endblock %}
+</main>
+</body>
+</html>

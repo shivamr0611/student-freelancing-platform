@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block title %}Payments — FreelanceHub{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Payments</h1>
+  <p>Manage and release payments to hired students</p>
+</div>
+
+{% if payments %}
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Student</th><th>Job</th><th>Amount</th><th>Status</th><th>Paid On</th><th>Action</th></tr>
+      </thead>
+      <tbody>
+        {% for payment in payments %}
+        <tr>
+          <td>
+            <div style="font-weight:500;">{{ payment.application.student.full_name }}</div>
+            <div style="font-size:0.78rem;color:var(--muted);">{{ payment.application.student.college }}</div>
+          </td>
+          <td style="font-size:0.875rem;">{{ payment.application.job.title }}</td>
+          <td>
+            <span style="font-family:'Syne',sans-serif;font-weight:700;color:var(--accent2);">₹{{ payment.amount }}</span>
+          </td>
+          <td>
+            <span class="badge badge-{{ payment.status }}">
+              {% if payment.status == 'paid' %}✅ Paid{% else %}⏳ Pending{% endif %}
+            </span>
+          </td>
+          <td style="font-size:0.83rem;color:var(--muted);">
+            {% if payment.paid_at %}{{ payment.paid_at|date:"d M Y, H:i" }}{% else %}—{% endif %}
+          </td>
+          <td>
+            {% if payment.status == 'not_paid' %}
+              {% if payment.application.submission %}
+                <a href="{% url 'company_release_payment' payment.id %}"
+                   onclick="return confirm('Release ₹{{ payment.amount }} to {{ payment.application.student.full_name }}?')"
+                   class="btn btn-success btn-sm">💸 Release</a>
+              {% else %}
+                <span style="font-size:0.78rem;color:var(--muted);">Waiting for submission</span>
+              {% endif %}
+            {% else %}
+              <span style="font-size:0.83rem;color:var(--muted);">Done ✓</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% else %}
+<div class="empty-state">
+  <div class="icon">💳</div>
+  <p>No payment records yet. Hire a student first!</p>
+</div>
+{% endif %}
+{% endblock %}

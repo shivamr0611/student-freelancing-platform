@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Login — FreelanceHub{% endblock %}
+{% block content %}
+<div style="width:100%;max-width:420px;">
+  <div style="text-align:center;margin-bottom:32px;">
+    <div style="font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;background:linear-gradient(135deg,#6c63ff,#00d4aa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">FreelanceHub</div>
+    <p style="color:var(--muted);margin-top:8px;font-size:0.9rem;">Student Freelancing Platform</p>
+  </div>
+  <div class="card">
+    <h2 style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:700;margin-bottom:20px;">Sign In</h2>
+    {% if messages %}{% for msg in messages %}<div class="alert alert-{{ msg.tags }}">{{ msg }}</div>{% endfor %}{% endif %}
+    <form method="POST">
+      {% csrf_token %}
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" name="username" class="form-control" placeholder="Enter your username" required>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" name="password" class="form-control" placeholder="Enter your password" required>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;padding:12px;">Sign In</button>
+    </form>
+    <p style="text-align:center;margin-top:16px;font-size:0.875rem;color:var(--muted);">
+      Don't have an account? <a href="{% url 'register' %}" style="color:var(--accent);">Register</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

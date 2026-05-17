@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block title %}Manage Students — Admin{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Manage Students</h1>
+  <p>{{ students|length }} registered student{{ students|length|pluralize }}</p>
+</div>
+
+{% if students %}
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>#</th><th>Name</th><th>College</th><th>Skills</th><th>Earnings</th><th>Joined</th><th>Status</th><th>Action</th></tr>
+      </thead>
+      <tbody>
+        {% for student in students %}
+        <tr>
+          <td style="color:var(--muted);font-size:0.83rem;">{{ forloop.counter }}</td>
+          <td>
+            <div style="font-weight:500;">{{ student.full_name }}</div>
+            <div style="font-size:0.78rem;color:var(--muted);">{{ student.user.username }}</div>
+          </td>
+          <td style="font-size:0.85rem;color:var(--muted);">{{ student.college }}</td>
+          <td style="max-width:200px;">
+            {% for skill in student.skills_list|slice:":3" %}
+              <span class="skill-tag" style="font-size:0.7rem;">{{ skill }}</span>
+            {% endfor %}
+          </td>
+          <td style="color:var(--accent2);font-weight:500;">₹{{ student.earnings }}</td>
+          <td style="font-size:0.83rem;color:var(--muted);">{{ student.created_at|date:"d M Y" }}</td>
+          <td>
+            {% if student.user.is_active %}
+              <span class="badge badge-hired">Active</span>
+            {% else %}
+              <span class="badge badge-rejected">Inactive</span>
+            {% endif %}
+          </td>
+          <td>
+            <a href="{% url 'admin_toggle_student' student.user.id %}"
+               class="btn btn-sm {% if student.user.is_active %}btn-danger{% else %}btn-success{% endif %}"
+               onclick="return confirm('{% if student.user.is_active %}Deactivate{% else %}Activate{% endif %} this student account?')">
+              {% if student.user.is_active %}Deactivate{% else %}Activate{% endif %}
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% else %}
+<div class="empty-state">
+  <div class="icon">🎓</div>
+  <p>No students registered yet.</p>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block title %}Active Jobs — FreelanceHub{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Active Jobs</h1>
+  <p>Jobs currently in progress</p>
+</div>
+
+{% if active_jobs %}
+  {% for job in active_jobs %}
+  {% with hired_app=job.applications.all|dictsort:"status" %}
+  <div class="job-card" style="border-left:3px solid var(--warn);">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;">
+      <div style="flex:1;">
+        <div class="job-card-title">{{ job.title }}</div>
+        <div class="job-card-meta">
+          <span>💰 ₹{{ job.budget }}</span>
+          <span>📅 Deadline: {{ job.deadline }}</span>
+          <span class="badge badge-in_progress">⚡ In Progress</span>
+        </div>
+
+        <!-- Hired student info -->
+        {% for app in job.applications.all %}
+          {% if app.status == 'hired' %}
+          <div style="margin-top:14px;background:var(--surface2);border-radius:8px;padding:14px;">
+            <div style="font-size:0.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Hired Student</div>
+            <div style="font-weight:500;">{{ app.student.full_name }}</div>
+            <div style="font-size:0.83rem;color:var(--muted);">{{ app.student.college }}</div>
+            <div style="margin-top:6px;">
+              {% for skill in app.student.skills_list %}
+                <span class="skill-tag" style="font-size:0.7rem;">{{ skill }}</span>
+              {% endfor %}
+            </div>
+
+            {% if app.submission %}
+            <div style="margin-top:12px;background:rgba(0,212,170,0.08);border:1px solid rgba(0,212,170,0.2);border-radius:6px;padding:10px;">
+              <div style="font-size:0.78rem;color:var(--accent2);font-weight:600;margin-bottom:4px;">📥 Work Submitted</div>
+              {% if app.submission.file %}
+                <a href="{{ app.submission.file.url }}" target="_blank" class="btn btn-secondary btn-sm" style="margin-right:8px;">📎 Download</a>
+              {% endif %}
+              {% if app.submission.notes %}
+                <p style="font-size:0.83rem;color:var(--muted);margin-top:6px;">{{ app.submission.notes }}</p>
+              {% endif %}
+            </div>
+            {% else %}
+            <div style="margin-top:10px;font-size:0.83rem;color:var(--muted);">⏳ Waiting for work submission...</div>
+            {% endif %}
+          </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+      <div>
+        <a href="{% url 'company_payments' %}" class="btn btn-secondary btn-sm">💳 Release Payment</a>
+      </div>
+    </div>
+  </div>
+  {% endwith %}
+  {% endfor %}
+{% else %}
+  <div class="empty-state">
+    <div class="icon">⚡</div>
+    <p>No active jobs right now. Hire a student to get started!</p>
+    <a href="{% url 'company_applicants' %}" class="btn btn-primary" style="margin-top:16px;">View Applicants</a>
+  </div>
+{% endif %}
+{% endblock %}
