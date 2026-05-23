@@ -1,7 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from .models import CustomUser, StudentProfile, CompanyProfile, Job, Application, Submission, PlatformSettings
-
+from django.core.validators import MinValueValidator #for test.py
+from decimal import Decimal
 
 class StudentRegistrationForm(UserCreationForm):
     full_name = forms.CharField(max_length=200)
@@ -63,10 +64,26 @@ class CompanyRegistrationForm(UserCreationForm):
         return user
 
 
-class JobPostForm(forms.ModelForm):
+'''class JobPostForm(forms.ModelForm):
     class Meta:
         model = Job
         fields = ['title', 'description', 'required_skills', 'budget', 'deadline', 'category']
+        widgets = {
+            'deadline': forms.DateInput(attrs={'type': 'date'}),
+            'description': forms.Textarea(attrs={'rows': 4}),
+            'required_skills': forms.TextInput(attrs={'placeholder': 'e.g. Python, Django, MySQL'}),
+        }'''
+
+class JobPostForm(forms.ModelForm):
+    budget = forms.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        validators=[MinValueValidator(Decimal('0.01'),
+            message='Budget must be greater than zero.')]
+    )
+    class Meta:
+        model = Job
+        fields = ['title', 'description', 'required_skills','budget', 'deadline', 'category']
         widgets = {
             'deadline': forms.DateInput(attrs={'type': 'date'}),
             'description': forms.Textarea(attrs={'rows': 4}),
